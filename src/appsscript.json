@@ -15,9 +15,6 @@
       "SM_POSTS"
     ],
     "shortDescription": "A connector for the SM posts assignment API",
-    "authType": [
-      "NONE"
-    ],
     "feeType": [
       "FREE"
     ],
