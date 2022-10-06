@@ -37,7 +37,7 @@ const getData = (request: GetDataRequest): GetDataResponse => {
         request.fields.map(({name}) => name),
     );
 
-    const limit = request.configParams.postLimit || 100;
+    const limit = request.configParams?.postLimit || 100;
     const properties = PropertiesService.getUserProperties();
     const slToken = properties.getProperty('dscc.slToken');
 
@@ -105,12 +105,19 @@ const doAPICall = (
     slToken: string,
     page: number,
 ): apiData => {
+  const options = {
+    muteHttpExceptions: true,
+    method: 'get',
+  };
   const url = `https://api.supermetrics.com/assignment/posts?sl_token=${slToken}&page=${page}`;
-  const response = UrlFetchApp.fetch(url);
+  const response = UrlFetchApp.fetch(url, options);
   const statusCode = response.getResponseCode();
 
   if (statusCode !== 200) {
     Logger.log('An exception occurred getting the posts:');
+    if (statusCode === 401) {
+      resetAuth();
+    }
     Logger.log(statusCode);
     Logger.log(response.getAllHeaders());
     Logger.log(response.getContentText());
